@@ -68,6 +68,10 @@ const options = {
 
 // bookings collection
 app.get('/bookings', verifyJwt, async(req,res)=>{
+  const decoded = req.decoded;
+  if(decoded.email!== req.query.email){
+    return res.status(403).send({error:1, message:'forbidden Access'})
+  }
   let query = {};
   if(req.query?.email){
     query ={email:req.query.email};
@@ -120,7 +124,7 @@ app.post('/jwt',(req,res)=>{
   const user = req.body;
   console.log(user);
 const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{
-  expiresIn:'10h'});
+  expiresIn:'1h'});
 
 res.send({token})
 
